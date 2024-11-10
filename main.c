@@ -9,7 +9,7 @@
 #define ARQUIVO_USER "lista_usuarios.txt"
 
 // Declaração de procedimentos
-void exibeMenuInicial();
+void exibeMenuInicial(int admin);
 void pularLinhas(int quantidadeLinhas);
 void criptografaSenha(char* senhaResgatada);
 void incluirUsuario();
@@ -18,23 +18,25 @@ void excluirUsuario();
 void listagemUsuarios();
 
 // Declaração de funções
-int resgataOpcao();
+int resgataOpcao(int admin);
 int verificaIntegridadeSenha(char* senhaResgatada);
 int verificaUsuarioCadastrado(char* nomeUsuario);
+int cargo();
 
 // Execução do programa
 int main() {
 	setlocale(LC_ALL, "Portuguese");
 
     // Declaração de variáveis
-    int continuarPrograma = 1, opcaoEscolhida;
+    int continuarPrograma = 1, opcaoEscolhida, admin;
+    admin = cargo();
 
     // Iniciando o programa
     while (continuarPrograma) {
 
         // Exibindo as opções
-        exibeMenuInicial();
-        opcaoEscolhida = resgataOpcao();
+        exibeMenuInicial(admin);
+        opcaoEscolhida = resgataOpcao(admin);
 
         // Direcionando o usuário
         if (opcaoEscolhida != 0) {
@@ -46,10 +48,18 @@ int main() {
                     break;
 
                 case 2:
-                    alterarUsuario();
+                	if(admin){
+                    	alterarUsuario();
+                    }else{
+                    	printf("Apenas administradores podem alterar usuários");	
+					}
                     break;
                 case 3:
-                    excluirUsuario();
+                	if(admin){
+                		excluirUsuario();
+					}else{
+						printf("Apenas administradores podem excluir usuários");
+					}
                     break;
                 case 4:
                     listagemUsuarios();
@@ -72,9 +82,14 @@ int main() {
 }
 
 // Implementação de procedimentos
-void exibeMenuInicial() {
+void exibeMenuInicial(int admin) {
     // Mostrando as opções disponíveis
-    printf("===== Menu Inicial ===== \n\n1. Cadastro de usuario\n2. Alteracao de usuario\n3. Exclusao de usuario\n4. Listagem de usuarios\n5. Sair\n\n");
+    printf("===== Menu Inicial =====");
+    if(admin){
+    	printf("\n\n1. Cadastro de usuario\n2. Alteracao de usuario\n3. Exclusao de usuario\n4. Listagem de usuarios\n5. Sair\n\n");	
+	}else{
+		printf("\n\n1. Cadastro de usuario\n4. Listagem de usuarios\n5. Sair\n\n");
+	}
 }
 
 void pularLinhas(int quantidadeLinhas) {
@@ -105,7 +120,7 @@ void criptografaSenha(char* senhaResgatada) {
     }    
 }
 
-int resgataOpcao() {
+int resgataOpcao(int admin) {
     // Declaração de variáveis
     int opcao; 
 
@@ -114,10 +129,25 @@ int resgataOpcao() {
     scanf("%d", &opcao);
 
     // Realizando a verificação
-    if (opcao < 1 || opcao > 5) {
+    if (opcao < 1 || opcao > 5 || (admin == 0 && (opcao == 2 || opcao == 3))) {
         return 0;
     }
     return opcao;
+}
+
+int cargo(){
+	char cargo[20];
+	
+	printf("Informe o cargo (admin/funcionario): ");
+	scanf("%s", cargo);
+	
+	if(strcmp(cargo, "admin") == 0){
+		return 1;
+	}else if(strcmp(cargo, "funcionario") == 0){
+		return 0;
+	}else{
+		printf("Cargo inválido");
+	}
 }
 
 int verificaUsuarioCadastrado(char* nomeUsuario){ // função para verificar se existe algum usuário com o nome inserido
@@ -168,11 +198,6 @@ void incluirUsuario(){ // função para adicionar usuarios em "lista_usuarios.tx
     if(arquivo == NULL){
         printf("Erro ao encontrar o arquivo. Criando arquivo.\n");
         arquivo = fopen(ARQUIVO_USER, "w");
-        
-        if(arquivo == NULL){
-            printf("Erro ao criar o arquivo.\n");
-            return;
-        }
     }
     
     fprintf(arquivo, "%s, %s\n", nomeUsuario, senha);
