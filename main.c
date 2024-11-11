@@ -25,7 +25,7 @@ int cargo();
 
 // Execução do programa
 int main() {
-	setlocale(LC_ALL, "Portuguese");
+    setlocale(LC_ALL, "Portuguese");
 
     // Declaração de variáveis
     int continuarPrograma = 1, opcaoEscolhida, admin;
@@ -48,18 +48,18 @@ int main() {
                     break;
 
                 case 2:
-                	if(admin){
+                    if(admin){
                     	alterarUsuario();
                     }else{
                     	printf("Apenas administradores podem alterar usuários");	
-					}
+		    }
                     break;
                 case 3:
-                	if(admin){
-                		excluirUsuario();
-					}else{
-						printf("Apenas administradores podem excluir usuários");
-					}
+                    if(admin){
+                	excluirUsuario();
+		    }else{
+			printf("Apenas administradores podem excluir usuários");
+		    }
                     break;
                 case 4:
                     listagemUsuarios();
@@ -87,9 +87,9 @@ void exibeMenuInicial(int admin) {
     printf("===== Menu Inicial =====");
     if(admin){
     	printf("\n\n1. Cadastro de usuario\n2. Alteracao de usuario\n3. Exclusao de usuario\n4. Listagem de usuarios\n5. Sair\n\n");	
-	}else{
-		printf("\n\n1. Cadastro de usuario\n4. Listagem de usuarios\n5. Sair\n\n");
-	}
+    }else{
+	printf("\n\n1. Cadastro de usuario\n4. Listagem de usuarios\n5. Sair\n\n");
+    }
 }
 
 void pularLinhas(int quantidadeLinhas) {
